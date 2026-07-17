@@ -13,6 +13,8 @@ theme = "PaperMod"
   ShowCodeCopyButtons = true
   ShowToc = true
   disableSpecial1stPost = true
+  defaultTheme = "dark"
+  disableThemeToggle = false
 
 [[menu.main]]
   name = "Writeups"
