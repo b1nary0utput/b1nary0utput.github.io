@@ -1,0 +1,35 @@
+baseURL = "https://b1nary0utput.github.io/"
+languageCode = "en-us"
+title = "b1nary0utput"
+theme = "PaperMod"
+
+[params]
+  env = "production"
+  description = "Infosec notes, CTF writeups, and training logs"
+  DateFormat = "January 2, 2006"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  disableSpecial1stPost = true
+
+[[menu.main]]
+  name = "Writeups"
+  url = "/writeups/"
+  weight = 10
+
+[[menu.main]]
+  name = "Projets"
+  url = "/projects/"
+  weight = 20
+
+[[menu.main]]
+  name = "Notes"
+  url = "/notes/"
+  weight = 30
+
+[[menu.main]]
+  name = "About"
+  url = "/about/"
+  weight = 40
