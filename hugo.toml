@@ -1,0 +1,77 @@
+baseURL = "https://b1nary0utput.github.io/"
+languageCode = "en-us"
+title = "b1nary0utput"
+theme = "PaperMod"
+
+[params]
+  env = "production"
+  description = "Infosec notes, CTF writeups, and training logs"
+  DateFormat = "January 2, 2006"
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowCodeCopyButtons = true
+  ShowToc = true
+  disableSpecial1stPost = true
+  defaultTheme = "dark"
+  disableThemeToggle = false
+
+############################
+# Main Menu
+############################
+
+[[menu.main]]
+identifier = "home"
+name = "Home"
+url = "/"
+weight = 10
+
+[[menu.main]]
+identifier = "writeups"
+name = "Writeups"
+url = "/writeups/"
+weight = 20
+
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 30
+
+############################
+# Social Media Icons
+############################
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/b1nary0utput"
+
+[[params.socialIcons]]
+name = "x"
+url = "https://x.com/b1nary0utput"
+
+[[params.socialIcons]]
+name = "youtube"
+url = "https://www.youtube.com/channel/UCAzliGGtF_P7IL-vna0L0Eg"
+
+[[params.socialIcons]]
+name = "udemy"
+url = "https://www.udemy.com/user/ricardoparraga/"
+
+[[params.socialIcons]]
+name = "email"
+url = "mailto:b1nary0utput@protonmail.com"
+
+[params.profileMode]
+enabled = true
+title = "Ricardo Parraga Zaldivar"
+subtitle = "Security Engineer • Cybersecurity Instructor • Linux User"
+imageUrl = "profile.jpeg"
+imageTitle = "Ricardo Parraga Zaldivar"
+imageWidth = 300
+imageHeight = 300
+
+buttons = [
+  { name = "Writeups", url = "/writeups/" },
+  { name = "About", url = "/about/" }
+]
