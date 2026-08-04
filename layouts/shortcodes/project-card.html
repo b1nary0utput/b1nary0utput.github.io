@@ -1,0 +1,42 @@
+{{ $image := .Get "image" }}
+{{ $title := .Get "title" }}
+{{ $status := .Get "status" }}
+{{ $tags := split (.Get "tags") "," }}
+{{ $caseStudy := .Get "case_study" }}
+{{ $report := .Get "report" }}
+
+<div class="project-card">
+  {{ with $image }}
+  <div class="project-image">
+    <img src="{{ . }}" alt="{{ $title }}" loading="lazy">
+    {{ if $status }}
+    <span class="status-badge status-{{ $status | urlize }}">{{ $status }}</span>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <div class="project-body">
+    <h3 class="project-title">{{ $title }}</h3>
+
+    {{ if $tags }}
+    <div class="project-tags">
+      {{ range $tags }}
+      <span class="tag-badge">{{ trim . " " }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+
+    <div class="project-desc">
+      {{ .Inner | markdownify }}
+    </div>
+
+    <div class="project-links">
+      {{ with $caseStudy }}
+      <a href="{{ . }}" class="project-link primary">Read case study →</a>
+      {{ end }}
+      {{ with $report }}
+      <a href="{{ . }}" class="project-link secondary" target="_blank" rel="noopener">Open report ↗</a>
+      {{ end }}
+    </div>
+  </div>
+</div>

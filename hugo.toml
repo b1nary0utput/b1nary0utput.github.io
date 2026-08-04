@@ -16,6 +16,9 @@ theme = "PaperMod"
   defaultTheme = "dark"
   disableThemeToggle = false
 
+[markup.goldmark.renderer]
+  unsafe = true
+
 ############################
 # Main Menu
 ############################
@@ -27,16 +30,10 @@ url = "/"
 weight = 10
 
 [[menu.main]]
-identifier = "writeups"
-name = "Writeups"
-url = "/writeups/"
-weight = 20
-
-[[menu.main]]
 identifier = "about"
 name = "About"
 url = "/about/"
-weight = 30
+weight = 20
 
 ############################
 # Social Media Icons
@@ -53,6 +50,10 @@ url = "https://x.com/b1nary0utput"
 [[params.socialIcons]]
 name = "youtube"
 url = "https://www.youtube.com/channel/UCAzliGGtF_P7IL-vna0L0Eg"
+
+[[params.socialIcons]]
+name = "credly"
+url = "https://www.credly.com/users/ricardo-parraga-zaldivar/"
 
 [[params.socialIcons]]
 name = "udemy"
@@ -73,5 +74,6 @@ imageHeight = 300
 
 buttons = [
   { name = "Writeups", url = "/writeups/" },
+  { name = "Projects", url = "/projects/" },
   { name = "About", url = "/about/" }
 ]
