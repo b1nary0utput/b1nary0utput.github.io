@@ -73,7 +73,5 @@ imageWidth = 300
 imageHeight = 300
 
 buttons = [
-  { name = "Writeups", url = "/writeups/" },
-  { name = "Projects", url = "/projects/" },
   { name = "About", url = "/about/" }
 ]
