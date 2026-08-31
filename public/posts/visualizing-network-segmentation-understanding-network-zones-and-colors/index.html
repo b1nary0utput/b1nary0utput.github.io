@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Visualizing Network Segmentation: Understanding Network Zones and Colors | b1nary0utput</title>
+<meta name="keywords" content="Network Segmentation, Networking, Network Security, Network Architecture">
+<meta name="description" content="A visual guide to understanding network segmentation and the use of colors to distinguish network zones in diagrams.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4d83aa9fede59869c78f2dfbc08aba28c49ca7d3952dcd5eea858ace38c3f08d.css" integrity="sha256-TYOqn&#43;3lmGnHjy37wIq6KMScp9OVLc1e6oWKzjjD8I0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/">
+  <meta property="og:site_name" content="b1nary0utput">
+  <meta property="og:title" content="Visualizing Network Segmentation: Understanding Network Zones and Colors">
+  <meta property="og:description" content="A visual guide to understanding network segmentation and the use of colors to distinguish network zones in diagrams.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-08-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-08-13T00:00:00+00:00">
+    <meta property="article:tag" content="Network Segmentation">
+    <meta property="article:tag" content="Networking">
+    <meta property="article:tag" content="Network Security">
+    <meta property="article:tag" content="Network Architecture">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Visualizing Network Segmentation: Understanding Network Zones and Colors">
+  <meta name="twitter:description" content="A visual guide to understanding network segmentation and the use of colors to distinguish network zones in diagrams.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://localhost:1313/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Visualizing Network Segmentation: Understanding Network Zones and Colors",
+      "item": "http://localhost:1313/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Visualizing Network Segmentation: Understanding Network Zones and Colors",
+  "name": "Visualizing Network Segmentation: Understanding Network Zones and Colors",
+  "description": "A visual guide to understanding network segmentation and the use of colors to distinguish network zones in diagrams.",
+  "keywords": [
+    "Network Segmentation", "Networking", "Network Security", "Network Architecture"
+  ],
+  "articleBody": "Overview Network segmentation is a fundamental part of network security, allowing an environment to be divided into separate zones based on trust, function, and security requirements. These zones are often represented using colors such as red, orange, yellow, green, and blue, with each color indicating a different level of trust or a specific security purpose. By combining these security zones with different network topologies, organizations can control how systems communicate, isolate sensitive resources, and limit the potential impact of a security incident.\nIn this article, we’ll explore the most common zone colors, what they represent, and how they are applied across different network topologies.\nRed Zone — Internet / External Network The red zone represents the Internet or an external, untrusted network. It is typically used to identify networks or systems that are outside the organization’s direct control and should therefore be treated as potentially hostile. In a network topology diagram, the red zone provides a clear visual boundary between the organization’s trusted infrastructure and the outside world.\nGreen Zone — Internal Network The green zone represents the trusted internal network, where internal users, workstations, and private organizational resources are located. Although the zone is commonly referred to as trusted, this does not mean that all internal traffic should be automatically trusted; segmentation, access controls, monitoring, and least-privilege principles should still be applied to limit lateral movement if an internal system or user account is compromised.\nOrange Zone — DMZ The orange zone represents the Demilitarized Zone (DMZ), a semi-trusted network designed to host systems that need to be accessible from external networks while keeping them isolated from the internal network. Typical examples include web servers, mail servers, DNS servers, and other public-facing services. In a properly segmented architecture, the DMZ is protected by firewall rules that control traffic between the Internet, the DMZ, and the internal network, limiting communication to only the services and ports that are required.\nYellow Zone — Internal Servers The yellow zone represents the internal server network, where servers that provide services to users and internal applications are hosted. These systems are not normally exposed directly to the Internet, but they may contain important organizational resources such as application servers, file servers, database servers, and other internal services. Separating servers from user workstations allows administrators to apply specific access controls between users and server resources, helping limit unauthorized access and reduce the impact of a compromised workstation.\nBlue Zone — Mobile Users The blue zone represents a network segment for mobile and wireless users, such as laptops, smartphones, tablets, and other devices connecting through Wi-Fi. It provides a separate security boundary for users who may connect to the organization from wireless or mobile environments, allowing access to internal resources to be controlled independently from wired workstations. Firewall platforms such as Endian explicitly use a blue zone for wireless clients, separating them from the primary green internal network.\n",
+  "wordCount" : "482",
+  "inLanguage": "en",
+  "datePublished": "2026-08-13T00:00:00Z",
+  "dateModified": "2026-08-13T00:00:00Z",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "b1nary0utput",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="b1nary0utput (Alt + H)">b1nary0utput</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/notes/" title="Notes">
+                    <span>Notes</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Visualizing Network Segmentation: Understanding Network Zones and Colors
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h1>
+    <div class="post-description">
+      A visual guide to understanding network segmentation and the use of colors to distinguish network zones in diagrams.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-08-13 00:00:00 +0000 UTC'>August 13, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#overview" aria-label="Overview">Overview</a></li>
+            <li>
+                <a href="#red-zone--internet--external-network" aria-label="Red Zone — Internet / External Network">Red Zone — Internet / External Network</a></li>
+            <li>
+                <a href="#green-zone--internal-network" aria-label="Green Zone — Internal Network">Green Zone — Internal Network</a></li>
+            <li>
+                <a href="#orange-zone--dmz" aria-label="Orange Zone — DMZ">Orange Zone — DMZ</a></li>
+            <li>
+                <a href="#yellow-zone--internal-servers" aria-label="Yellow Zone — Internal Servers">Yellow Zone — Internal Servers</a></li>
+            <li>
+                <a href="#blue-zone--mobile-users" aria-label="Blue Zone — Mobile Users">Blue Zone — Mobile Users</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h3 id="overview">Overview<a hidden class="anchor" aria-hidden="true" href="#overview">#</a></h3>
+<p>Network segmentation is a fundamental part of network security, allowing an environment to be divided into separate zones based on trust, function, and security requirements. These zones are often represented using colors such as <strong>red, orange, yellow, green, and blue</strong>, with each color indicating a different level of trust or a specific security purpose. By combining these security zones with different network topologies, organizations can control how systems communicate, isolate sensitive resources, and limit the potential impact of a security incident.</p>
+<p>In this article, we’ll explore the most common zone colors, what they represent, and how they are applied across different network topologies.</p>
+<h3 id="red-zone--internet--external-network">Red Zone — Internet / External Network<a hidden class="anchor" aria-hidden="true" href="#red-zone--internet--external-network">#</a></h3>
+<p>The <strong>red zone</strong> represents the <strong>Internet or an external, untrusted network</strong>. It is typically used to identify networks or systems that are outside the organization’s direct control and should therefore be treated as potentially hostile. In a network topology diagram, the red zone provides a clear visual boundary between the organization’s trusted infrastructure and the outside world.</p>
+<p><a href="Simple_Red-to-Green_Network_Topology.png"><img alt="Simple Red-to-Green Network Topology" loading="lazy" src="/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/Simple_Red-to-Green_Network_Topology.png"></a></p>
+<h3 id="green-zone--internal-network">Green Zone — Internal Network<a hidden class="anchor" aria-hidden="true" href="#green-zone--internal-network">#</a></h3>
+<p>The <strong>green zone</strong> represents the <strong>trusted internal network</strong>, where internal users, workstations, and private organizational resources are located. Although the zone is commonly referred to as trusted, this does not mean that all internal traffic should be automatically trusted; segmentation, access controls, monitoring, and least-privilege principles should still be applied to limit lateral movement if an internal system or user account is compromised.</p>
+<p><a href="Network_Topology_with_DMZ.png"><img alt="Network Topology with DMZ" loading="lazy" src="/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/Network_Topology_with_DMZ.png"></a></p>
+<h3 id="orange-zone--dmz">Orange Zone — DMZ<a hidden class="anchor" aria-hidden="true" href="#orange-zone--dmz">#</a></h3>
+<p>The <strong>orange zone</strong> represents the <strong>Demilitarized Zone (DMZ)</strong>, a <strong>semi-trusted network</strong> designed to host systems that need to be accessible from external networks while keeping them isolated from the internal network. Typical examples include web servers, mail servers, DNS servers, and other public-facing services. In a properly segmented architecture, the DMZ is protected by firewall rules that control traffic between the Internet, the DMZ, and the internal network, limiting communication to only the services and ports that are required.</p>
+<h3 id="yellow-zone--internal-servers">Yellow Zone — Internal Servers<a hidden class="anchor" aria-hidden="true" href="#yellow-zone--internal-servers">#</a></h3>
+<p>The <strong>yellow zone</strong> represents the <strong>internal server network</strong>, where servers that provide services to users and internal applications are hosted. These systems are not normally exposed directly to the Internet, but they may contain important organizational resources such as application servers, file servers, database servers, and other internal services. Separating servers from user workstations allows administrators to apply specific access controls between users and server resources, helping limit unauthorized access and reduce the impact of a compromised workstation.</p>
+<p><a href="Full_Network_Topology_with_5_zones.png"><img alt="Full Network Topology with 5 zones" loading="lazy" src="/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/Full_Network_Topology_with_5_zones.png"></a></p>
+<h3 id="blue-zone--mobile-users">Blue Zone — Mobile Users<a hidden class="anchor" aria-hidden="true" href="#blue-zone--mobile-users">#</a></h3>
+<p>The <strong>blue zone</strong> represents a network segment for <strong>mobile and wireless users</strong>, such as laptops, smartphones, tablets, and other devices connecting through Wi-Fi. It provides a separate security boundary for users who may connect to the organization from wireless or mobile environments, allowing access to internal resources to be controlled independently from wired workstations. Firewall platforms such as Endian explicitly use a blue zone for wireless clients, separating them from the primary green internal network.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/network-segmentation/">Network Segmentation</a></li>
+      <li><a href="http://localhost:1313/tags/networking/">Networking</a></li>
+      <li><a href="http://localhost:1313/tags/network-security/">Network Security</a></li>
+      <li><a href="http://localhost:1313/tags/network-architecture/">Network Architecture</a></li>
+    </ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">b1nary0utput</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

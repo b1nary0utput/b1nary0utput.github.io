@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>MYDFIR 30-Day Elastic Challenge: Windows Server | b1nary0utput</title>
+<meta name="keywords" content="DFIR, Windows Server, VirtualBox, Homelab">
+<meta name="description" content="Deploying a Fleet Server and enrolling a Windows Server 2019 VM as an Elastic Agent for the MYDFIR 30-Day Elastic Challenge.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4d83aa9fede59869c78f2dfbc08aba28c49ca7d3952dcd5eea858ace38c3f08d.css" integrity="sha256-TYOqn&#43;3lmGnHjy37wIq6KMScp9OVLc1e6oWKzjjD8I0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/">
+  <meta property="og:site_name" content="b1nary0utput">
+  <meta property="og:title" content="MYDFIR 30-Day Elastic Challenge: Windows Server">
+  <meta property="og:description" content="Deploying a Fleet Server and enrolling a Windows Server 2019 VM as an Elastic Agent for the MYDFIR 30-Day Elastic Challenge.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-08-05T19:59:32-06:00">
+    <meta property="article:modified_time" content="2026-08-05T19:59:32-06:00">
+    <meta property="article:tag" content="DFIR">
+    <meta property="article:tag" content="Windows Server">
+    <meta property="article:tag" content="VirtualBox">
+    <meta property="article:tag" content="Homelab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MYDFIR 30-Day Elastic Challenge: Windows Server">
+  <meta name="twitter:description" content="Deploying a Fleet Server and enrolling a Windows Server 2019 VM as an Elastic Agent for the MYDFIR 30-Day Elastic Challenge.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Projects",
+      "item": "http://localhost:1313/projects/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "MYDFIR 30-Day Elastic Challenge",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "MYDFIR 30-Day Elastic Challenge: Windows Server",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MYDFIR 30-Day Elastic Challenge: Windows Server",
+  "name": "MYDFIR 30-Day Elastic Challenge: Windows Server",
+  "description": "Deploying a Fleet Server and enrolling a Windows Server 2019 VM as an Elastic Agent for the MYDFIR 30-Day Elastic Challenge.",
+  "keywords": [
+    "DFIR", "Windows Server", "VirtualBox", "Homelab"
+  ],
+  "articleBody": "Create a Fleet Server We previously deployed an Ubuntu VM from osboxes.org to use as our Fleet Server.\nTo configure it as a Fleet Server, we go back to the Elastic web interface. From our analyst machine, we navigate to our Elastic server using a web browser.\nFrom the hamburger menu, select Management \u003e Fleet and click the blue Add Fleet Server button.\nA Fleet Server is required before we can enroll Elastic Agents using Fleet.\nFrom the side panel, select Quick Start. We enter MYDFIR-FLEET-SERVER as the Fleet Server name and specify the Fleet Server URL:\nhttps://172.31.0.10\nWe then click Generate Fleet Server Policy.\nAfter a couple of minutes, we receive confirmation that the Fleet Server policy has been created.\nWe can now proceed to Step 2, Install Fleet Server to a centralized host.\nWe will run the installation commands from Step 2 on our Ubuntu MYDFIR-FLEET-SERVER VM.\nTroubleshooting the Fleet Server installation The installation initially failed. Looking closely at the installation output, I noticed that the script was downloading an agent package for the wrong architecture, which caused the installation to fail on my Fleet Server.\nInitially, I thought the problem might be related to the user account, so I tried running the installation as root.\nHowever, the installation still failed.\nI then corrected the download to use the x86_64 version of the Elastic Agent. I also removed the files from the previous installation attempt before trying again.\nAs Steven demonstrated in the Day 7 video, some troubleshooting was required because the generated installation command was not working correctly in my environment. The download portion worked, but the remaining commands did not.\nInstead of running the entire command at once, I downloaded the correct x86_64 package and executed each step individually.\nOnce the agent package was downloaded, I extracted its contents, changed into the extracted directory, and proceeded with the installation.\nThe installation completed successfully.\nWe can now return to the Elastic web interface and verify the Fleet Server enrollment. The interface shows the message “Fleet Server connected.”\nWe can then click Continue enrolling Elastic Agent to proceed with adding our Windows Server.\nInstalling Elastic Agent on Windows Server We previously deployed a Windows Server 2019 VM in VirtualBox with the name MYDFIR-WIN.\nNow we can add an Elastic Agent to the Windows Server. From Fleet, click Add and select Agent.\nWe create an agent policy named MYDFIR-WIN-POLICY and click Create Policy.\nInterestingly, I received an error indicating that the policy already existed. I don’t remember creating this policy previously.\nI navigated to Agent Policies to see what policies were already configured, and I found the MYDFIR-WIN-POLICY policy already there. I clicked on it to inspect the configuration.\nInside the policy, I clicked Add Agent to add the Windows Server agent.\nI scrolled down to the agent installation section, selected Windows, and copied the installation command.\nTroubleshooting the Windows Agent installation Before running the installation command, I ran into several issues with the Elastic Agent installation.\nI noticed that the Fleet Server URL and port in the generated command were not correct for my lab environment, similar to the issue Steven demonstrated in his video.\nI changed the Fleet Server IP address to point to my Fleet Server:\n172.31.0.20\nI also changed the port from:\n443\nto:\n8220\nWith the Fleet Server configuration corrected, I copied the installation command to the Windows Server and ran it from an elevated PowerShell window.\nFor this lab, I also used the --insecure option and confirmed the installation by entering Y when prompted.\nThe Elastic Agent was successfully installed on the Windows Server, allowing it to communicate with our Fleet Server.\nWe can verify the enrollment from the Fleet interface, where the Windows Server appears as an enrolled agent.\nWe can also verify that logs are being collected by searching Elasticsearch for the Windows Server’s agent.name.\nNext Steps With the Fleet Server and Windows Server agent configured, we are ready to continue with Day 8 of the MYDFIR 30-Day Challenge.\nThe next step will introduce Sysmon, which will provide additional Windows telemetry and help us collect more detailed information for our DFIR and detection activities.\n",
+  "wordCount" : "693",
+  "inLanguage": "en",
+  "datePublished": "2026-08-05T19:59:32-06:00",
+  "dateModified": "2026-08-05T19:59:32-06:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "b1nary0utput",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="b1nary0utput (Alt + H)">b1nary0utput</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/notes/" title="Notes">
+                    <span>Notes</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      MYDFIR 30-Day Elastic Challenge: Windows Server
+    </h1>
+    <div class="post-meta">
+
+<span title='2026-08-05 19:59:32 -0600 CST'>August 5, 2026</span>&nbsp;·&nbsp;<span>4 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#create-a-fleet-server" aria-label="Create a Fleet Server">Create a Fleet Server</a><ul>
+                    
+            <li>
+                <a href="#troubleshooting-the-fleet-server-installation" aria-label="Troubleshooting the Fleet Server installation">Troubleshooting the Fleet Server installation</a></li></ul>
+            </li>
+            <li>
+                <a href="#installing-elastic-agent-on-windows-server" aria-label="Installing Elastic Agent on Windows Server">Installing Elastic Agent on Windows Server</a><ul>
+                    
+            <li>
+                <a href="#troubleshooting-the-windows-agent-installation" aria-label="Troubleshooting the Windows Agent installation">Troubleshooting the Windows Agent installation</a></li></ul>
+            </li>
+            <li>
+                <a href="#next-steps" aria-label="Next Steps">Next Steps</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h2 id="create-a-fleet-server">Create a Fleet Server<a hidden class="anchor" aria-hidden="true" href="#create-a-fleet-server">#</a></h2>
+<p>We previously deployed an Ubuntu VM from <a href="https://www.osboxes.org/ubuntu/">osboxes.org</a> to use as our Fleet Server.</p>
+<p>To configure it as a Fleet Server, we go back to the Elastic web interface. From our analyst machine, we navigate to our Elastic server using a web browser.</p>
+<p>From the hamburger menu, select <strong>Management &gt; Fleet</strong> and click the blue <strong>Add Fleet Server</strong> button.</p>
+<p><a href="Add_a_Fleet_server.png"><img alt="Add a Fleet Server" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Add_a_Fleet_server.png"></a></p>
+<p>A Fleet Server is required before we can enroll Elastic Agents using Fleet.</p>
+<p>From the side panel, select <strong>Quick Start</strong>. We enter <code>MYDFIR-FLEET-SERVER</code> as the Fleet Server name and specify the Fleet Server URL:</p>
+<p><code>https://172.31.0.10</code></p>
+<p>We then click <strong>Generate Fleet Server Policy</strong>.</p>
+<p><a href="Fleet_Server_Quick_Start.png"><img alt="Fleet Server Quick Start" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Quick_Start.png"></a></p>
+<p>After a couple of minutes, we receive confirmation that the <strong>Fleet Server policy has been created</strong>.</p>
+<p><a href="Fleet_Server_Policy_Created.png"><img alt="Fleet Server Policy Created" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Policy_Created.png"></a></p>
+<p>We can now proceed to Step 2, <strong>Install Fleet Server to a centralized host</strong>.</p>
+<p>We will run the installation commands from Step 2 on our Ubuntu <code>MYDFIR-FLEET-SERVER</code> VM.</p>
+<p><a href="Fleet_Server_Installation_Script.png"><img alt="Fleet Server Installation Script" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Installation_Script.png"></a></p>
+<h3 id="troubleshooting-the-fleet-server-installation">Troubleshooting the Fleet Server installation<a hidden class="anchor" aria-hidden="true" href="#troubleshooting-the-fleet-server-installation">#</a></h3>
+<p>The installation initially failed. Looking closely at the installation output, I noticed that the script was downloading an agent package for the wrong architecture, which caused the installation to fail on my Fleet Server.</p>
+<p>Initially, I thought the problem might be related to the user account, so I tried running the installation as <code>root</code>.</p>
+<p><a href="Fleet_Server_Failed_Installation.png"><img alt="Fleet Server Failed Installation Script" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Failed_Installation.png"></a></p>
+<p>However, the installation still failed.</p>
+<p><a href="Fleet_Server_Failed_Installation_ARM.png"><img alt="Fleet Server Failed Installation Script" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Failed_Installation_ARM.png"></a></p>
+<p>I then corrected the download to use the <strong>x86_64</strong> version of the Elastic Agent. I also removed the files from the previous installation attempt before trying again.</p>
+<p>As Steven demonstrated in the Day 7 video, some troubleshooting was required because the generated installation command was not working correctly in my environment. The download portion worked, but the remaining commands did not.</p>
+<p>Instead of running the entire command at once, I downloaded the correct x86_64 package and executed each step individually.</p>
+<p><a href="Downloading_the_x86_64_agent_file.png"><img alt="Downloading the x86_64 agent file" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Downloading_the_x86_64_agent_file.png"></a></p>
+<p>Once the agent package was downloaded, I extracted its contents, changed into the extracted directory, and proceeded with the installation.</p>
+<p><a href="Installing_the_elastic_agent.png"><img alt="Installing the Elastic Agent" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Installing_the_elastic_agent.png"></a></p>
+<p>The installation completed successfully.</p>
+<p><a href="Elastic_agent_has_been_successfully_installed.png"><img alt="Elastic Agent has been successfully installed" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Elastic_agent_has_been_successfully_installed.png"></a></p>
+<p>We can now return to the Elastic web interface and verify the Fleet Server enrollment. The interface shows the message <strong>&ldquo;Fleet Server connected.&rdquo;</strong></p>
+<p>We can then click <strong>Continue enrolling Elastic Agent</strong> to proceed with adding our Windows Server.</p>
+<p><a href="Fleet_Server_connected.png"><img alt="Fleet Server connected" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_connected.png"></a></p>
+<h2 id="installing-elastic-agent-on-windows-server">Installing Elastic Agent on Windows Server<a hidden class="anchor" aria-hidden="true" href="#installing-elastic-agent-on-windows-server">#</a></h2>
+<p>We previously deployed a Windows Server 2019 VM in VirtualBox with the name <code>MYDFIR-WIN</code>.</p>
+<p>Now we can add an Elastic Agent to the Windows Server. From Fleet, click <strong>Add</strong> and select <strong>Agent</strong>.</p>
+<p><a href="Fleet_Server_Add_Agent.png"><img alt="Fleet Server - Add Agent" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Add_Agent.png"></a></p>
+<p>We create an agent policy named <code>MYDFIR-WIN-POLICY</code> and click <strong>Create Policy</strong>.</p>
+<p><a href="Creating_Agent_Policy.png"><img alt="Creating Agent Policy" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Creating_Agent_Policy.png"></a></p>
+<p>Interestingly, I received an error indicating that the policy already existed. I don&rsquo;t remember creating this policy previously.</p>
+<p><a href="Error_Creating_Agent_Policy.png"><img alt="Error Creating Agent Policy" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Error_Creating_Agent_Policy.png"></a></p>
+<p>I navigated to <strong>Agent Policies</strong> to see what policies were already configured, and I found the <code>MYDFIR-WIN-POLICY</code> policy already there. I clicked on it to inspect the configuration.</p>
+<p><a href="Navigate_to_Agent_Policies.png"><img alt="Fleet Server - Add Agent" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Navigate_to_Agent_Policies.png"></a></p>
+<p>Inside the policy, I clicked <strong>Add Agent</strong> to add the Windows Server agent.</p>
+<p><a href="MYDFIR-POLICY_Add_Agent.png"><img alt="MYDFIR-POLICY Add Agent" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/MYDFIR-POLICY_Add_Agent.png"></a></p>
+<p>I scrolled down to the agent installation section, selected <strong>Windows</strong>, and copied the installation command.</p>
+<p><a href="Windows_Server_Agent_Installation_Code.png"><img alt="Windows Server Agent Installation Code" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Windows_Server_Agent_Installation_Code.png"></a></p>
+<h3 id="troubleshooting-the-windows-agent-installation">Troubleshooting the Windows Agent installation<a hidden class="anchor" aria-hidden="true" href="#troubleshooting-the-windows-agent-installation">#</a></h3>
+<p>Before running the installation command, I ran into several issues with the Elastic Agent installation.</p>
+<p>I noticed that the Fleet Server URL and port in the generated command were not correct for my lab environment, similar to the issue Steven demonstrated in his video.</p>
+<p>I changed the Fleet Server IP address to point to my Fleet Server:</p>
+<p><code>172.31.0.20</code></p>
+<p>I also changed the port from:</p>
+<p><code>443</code></p>
+<p>to:</p>
+<p><code>8220</code></p>
+<p><a href="Fleet_Server_Host_Configuration.png"><img alt="Fleet Server Host Configuration" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Fleet_Server_Host_Configuration.png"></a></p>
+<p>With the Fleet Server configuration corrected, I copied the installation command to the Windows Server and ran it from an <strong>elevated PowerShell</strong> window.</p>
+<p>For this lab, I also used the <code>--insecure</code> option and confirmed the installation by entering <code>Y</code> when prompted.</p>
+<p><a href="Windows_PowerShell_Agent_Installation.png"><img alt="Windows PowerShell Agent Installation" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Windows_PowerShell_Agent_Installation.png"></a></p>
+<p>The Elastic Agent was successfully installed on the Windows Server, allowing it to communicate with our Fleet Server.</p>
+<p>We can verify the enrollment from the Fleet interface, where the Windows Server appears as an enrolled agent.</p>
+<p><a href="Windows_Server_Enrolled_to_Fleet_Server.png"><img alt="Windows Server enrolled to Fleet Server" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Windows_Server_Enrolled_to_Fleet_Server.png"></a></p>
+<p>We can also verify that logs are being collected by searching Elasticsearch for the Windows Server&rsquo;s <code>agent.name</code>.</p>
+<p><a href="Windows_Server_agent-search.png"><img alt="Windows Server agent.name search" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/Windows_Server_agent-search.png"></a></p>
+<h2 id="next-steps">Next Steps<a hidden class="anchor" aria-hidden="true" href="#next-steps">#</a></h2>
+<p>With the Fleet Server and Windows Server agent configured, we are ready to continue with <strong>Day 8</strong> of the MYDFIR 30-Day Challenge.</p>
+<p>The next step will introduce <strong>Sysmon</strong>, which will provide additional Windows telemetry and help us collect more detailed information for our DFIR and detection activities.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/dfir/">DFIR</a></li>
+      <li><a href="http://localhost:1313/tags/windows-server/">Windows Server</a></li>
+      <li><a href="http://localhost:1313/tags/virtualbox/">VirtualBox</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/">
+    <span class="title">« Prev</span>
+    <span>MYDFIR 30-Day Elastic Challenge: ELK Setup</span>
+  </a>
+  <a class="next" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/">
+    <span class="title">Next »</span>
+    <span>MYDFIR 30-Day Elastic Challenge: Sysmon</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">b1nary0utput</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

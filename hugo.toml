@@ -30,10 +30,28 @@ url = "/"
 weight = 10
 
 [[menu.main]]
+identifier = "projects"
+name = "Projects"
+url = "/projects/"
+weight = 15
+
+[[menu.main]]
+identifier = "notes"
+name = "Notes"
+url = "/notes/"
+weight = 20
+
+[[menu.main]]
+identifier = "posts"
+name = "Posts"
+url = "/posts/"
+weight = 25
+
+[[menu.main]]
 identifier = "about"
 name = "About"
 url = "/about/"
-weight = 20
+weight = 30
 
 ############################
 # Social Media Icons

@@ -2,14 +2,97 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/about/</loc>
-    <lastmod>2026-08-03T12:37:22-06:00</lastmod>
+    <loc>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/</loc>
+    <lastmod>2026-08-04T19:59:32-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/</loc>
+    <lastmod>2026-08-05T19:59:32-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2026-08-03T12:37:22-06:00</lastmod>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>http://localhost:1313/tags/dfir/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/elastic/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/homelab/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/sysmon/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/windows-server/</loc>
+    <lastmod>2026-08-14T20:00:00-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/notes/ip/check-public-ip-linux/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/command-line/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/linux/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/networking/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/notes/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/notes/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/public-ip/</loc>
+    <lastmod>2026-08-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/network-architecture/</loc>
+    <lastmod>2026-08-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/network-security/</loc>
+    <lastmod>2026-08-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/network-segmentation/</loc>
+    <lastmod>2026-08-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/posts/</loc>
+    <lastmod>2026-08-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-08-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/visualizing-network-segmentation-understanding-network-zones-and-colors/</loc>
+    <lastmod>2026-08-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/virtualbox/</loc>
+    <lastmod>2026-08-05T19:59:32-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/kibana/</loc>
+    <lastmod>2026-08-04T19:59:32-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects/</loc>
+    <lastmod>2026-08-04T19:58:46-06:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/dns/</loc>
+    <lastmod>2026-08-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/notes/dns/popular-public-dns-providers/</loc>
+    <lastmod>2026-08-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/about/</loc>
+    <lastmod>2026-08-03T12:37:22-06:00</lastmod>
   </url>
 </urlset>

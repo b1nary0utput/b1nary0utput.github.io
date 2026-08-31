@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>MYDFIR 30-Day Elastic Challenge: Sysmon | b1nary0utput</title>
+<meta name="keywords" content="DFIR, Sysmon, Windows Server, Elastic, Homelab">
+<meta name="description" content="Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4d83aa9fede59869c78f2dfbc08aba28c49ca7d3952dcd5eea858ace38c3f08d.css" integrity="sha256-TYOqn&#43;3lmGnHjy37wIq6KMScp9OVLc1e6oWKzjjD8I0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/">
+  <meta property="og:site_name" content="b1nary0utput">
+  <meta property="og:title" content="MYDFIR 30-Day Elastic Challenge: Sysmon">
+  <meta property="og:description" content="Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-08-14T20:00:00-06:00">
+    <meta property="article:modified_time" content="2026-08-14T20:00:00-06:00">
+    <meta property="article:tag" content="DFIR">
+    <meta property="article:tag" content="Sysmon">
+    <meta property="article:tag" content="Windows Server">
+    <meta property="article:tag" content="Elastic">
+    <meta property="article:tag" content="Homelab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MYDFIR 30-Day Elastic Challenge: Sysmon">
+  <meta name="twitter:description" content="Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Projects",
+      "item": "http://localhost:1313/projects/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "MYDFIR 30-Day Elastic Challenge",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "MYDFIR 30-Day Elastic Challenge: Sysmon",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MYDFIR 30-Day Elastic Challenge: Sysmon",
+  "name": "MYDFIR 30-Day Elastic Challenge: Sysmon",
+  "description": "Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge.",
+  "keywords": [
+    "DFIR", "Sysmon", "Windows Server", "Elastic", "Homelab"
+  ],
+  "articleBody": "Introduction In the previous section, we deployed our Windows Server 2019 VM and enrolled the Elastic Agent with our Fleet Server.\nNow that the Windows Server is communicating with Elastic, we can improve the telemetry collected from the system by installing Sysmon (System Monitor).\nSysmon is a Windows system service and device driver that provides detailed information about system activity, including process creation, network connections, file creation, and other events that can be useful during DFIR investigations and threat hunting.\nDownloading Sysmon Sysmon is part of the Microsoft Sysinternals suite.\nFrom the Windows Server, download Sysmon from the Microsoft Sysinternals website.\nDownload Sysmon\nAfter downloading the archive, extract its contents to a directory on the Windows Server.\nInstalling Sysmon Before installing Sysmon, we need to decide which configuration we want to use.\nSysmon can be installed using its default configuration, but for security monitoring and DFIR purposes, a more comprehensive configuration is preferable.\nFor this lab, we will use a Sysmon configuration developed by Olaf Hartong to provide additional security telemetry.\nThe repository on GitHub: https://github.com/olafhartong/sysmon-modular\nDownload the default sysmonconfig.xml to the same folder where we have Sysmon and install.\nThe installation command follows this format:\n.\\Sysmon64.exe -accepteula -i sysmonconfig.xml The -accepteula option automatically accepts the Sysinternals license agreement, while -i installs the Sysmon service using the specified configuration file.\nAfter running the command, Sysmon should be installed as a Windows service.\nVerify the Installation We can verify that the Sysmon service is running by using the Windows Services console:\nWe should see the service with a status of Running\nAt this point, Sysmon is installed and running on our Windows Server. It is now generating additional Windows telemetry that can be collected by the Elastic Agent.\nVerify Sysmon Events We can also verify that Sysmon is generating events by opening the Windows Event Viewer.\nNavigate to:\nApplications and Services Logs \u003e Microsoft \u003e Windows \u003e Sysmon \u003e Operational\nHere we can see the events generated by Sysmon on our Windows Server.\nThese events provide additional information about activity occurring on the system, such as process creation, network connections, and other events depending on the configuration we installed.\nNext Steps With Sysmon installed and generating additional telemetry, our Windows Server is now producing valuable data that can be used for DFIR investigations and threat hunting.\nHowever, generating telemetry is only part of the process. We now need to make sure this data is collected and sent to our Elastic environment.\nIn the next section, we will look at how to ingest data into Elasticsearch and begin working with the data generated by our Windows Server.\n",
+  "wordCount" : "435",
+  "inLanguage": "en",
+  "datePublished": "2026-08-14T20:00:00-06:00",
+  "dateModified": "2026-08-14T20:00:00-06:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "b1nary0utput",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="b1nary0utput (Alt + H)">b1nary0utput</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/notes/" title="Notes">
+                    <span>Notes</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      MYDFIR 30-Day Elastic Challenge: Sysmon
+    </h1>
+    <div class="post-meta">
+
+<span title='2026-08-14 20:00:00 -0600 CST'>August 14, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#introduction" aria-label="Introduction">Introduction</a></li>
+            <li>
+                <a href="#downloading-sysmon" aria-label="Downloading Sysmon">Downloading Sysmon</a><ul>
+                    
+            <li>
+                <a href="#installing-sysmon" aria-label="Installing Sysmon">Installing Sysmon</a></li>
+            <li>
+                <a href="#verify-the-installation" aria-label="Verify the Installation">Verify the Installation</a></li>
+            <li>
+                <a href="#verify-sysmon-events" aria-label="Verify Sysmon Events">Verify Sysmon Events</a></li></ul>
+            </li>
+            <li>
+                <a href="#next-steps" aria-label="Next Steps">Next Steps</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>In the previous section, we deployed our Windows Server 2019 VM and enrolled the Elastic Agent with our Fleet Server.</p>
+<p>Now that the Windows Server is communicating with Elastic, we can improve the telemetry collected from the system by installing <strong>Sysmon (System Monitor)</strong>.</p>
+<p>Sysmon is a Windows system service and device driver that provides detailed information about system activity, including process creation, network connections, file creation, and other events that can be useful during DFIR investigations and threat hunting.</p>
+<h2 id="downloading-sysmon">Downloading Sysmon<a hidden class="anchor" aria-hidden="true" href="#downloading-sysmon">#</a></h2>
+<p>Sysmon is part of the Microsoft Sysinternals suite.</p>
+<p>From the Windows Server, download Sysmon from the Microsoft Sysinternals website.</p>
+<p><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon">Download Sysmon</a></p>
+<p><a href="Download_Sysmon_from_Microsoft_Learn.png"><img alt="Download Sysmon from Microsoft Learn" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/Download_Sysmon_from_Microsoft_Learn.png"></a></p>
+<p>After downloading the archive, extract its contents to a directory on the Windows Server.</p>
+<p><a href="Extracting_Sysmon_Zip_file.png"><img alt="Extracting Sysmon Zip file" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/Extracting_Sysmon_Zip_file.png"></a></p>
+<h3 id="installing-sysmon">Installing Sysmon<a hidden class="anchor" aria-hidden="true" href="#installing-sysmon">#</a></h3>
+<p>Before installing Sysmon, we need to decide which configuration we want to use.</p>
+<p>Sysmon can be installed using its default configuration, but for security monitoring and DFIR purposes, a more comprehensive configuration is preferable.</p>
+<p>For this lab, we will use a Sysmon configuration developed by Olaf Hartong to provide additional security telemetry.</p>
+<p>The repository on GitHub:
+<a href="https://github.com/olafhartong/sysmon-modular">https://github.com/olafhartong/sysmon-modular</a></p>
+<p>Download the default <code>sysmonconfig.xml</code> to the same folder where we have Sysmon and install.</p>
+<p><a href="Downloading_Sysmonconfig_xml.png"><img alt="Downloading Sysmonconfig.xml" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/Downloading_Sysmonconfig_xml.png"></a></p>
+<p>The installation command follows this format:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>.\Sysmon64.exe -accepteula -i sysmonconfig.xml
+</span></span></code></pre></div><p><a href="Installing_Sysmon_with_Config_file.png"><img alt="Installing Sysmon with Config File" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/Installing_Sysmon_with_Config_file.png"></a></p>
+<p>The <code>-accepteula</code> option automatically accepts the Sysinternals license agreement, while <code>-i</code> installs the Sysmon service using the specified configuration file.</p>
+<p>After running the command, Sysmon should be installed as a Windows service.</p>
+<h3 id="verify-the-installation">Verify the Installation<a hidden class="anchor" aria-hidden="true" href="#verify-the-installation">#</a></h3>
+<p>We can verify that the Sysmon service is running by using the Windows Services console:</p>
+<p><a href="Verifying_Sysmon_Installation_Service.png"><img alt="Verifying Sysmon Installation Service" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/Verifying_Sysmon_Installation_Service.png"></a></p>
+<p>We should see the service with a status of <strong>Running</strong></p>
+<p>At this point, Sysmon is installed and running on our Windows Server. It is now generating additional Windows telemetry that can be collected by the Elastic Agent.</p>
+<h3 id="verify-sysmon-events">Verify Sysmon Events<a hidden class="anchor" aria-hidden="true" href="#verify-sysmon-events">#</a></h3>
+<p>We can also verify that Sysmon is generating events by opening the Windows Event Viewer.</p>
+<p>Navigate to:</p>
+<p><strong>Applications and Services Logs &gt; Microsoft &gt; Windows &gt; Sysmon &gt; Operational</strong></p>
+<p><a href="Sysmon_Operational_Event_Log.png"><img alt="Sysmon Operational Event Log" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/Sysmon_Operational_Event_Log.png"></a></p>
+<p>Here we can see the events generated by Sysmon on our Windows Server.</p>
+<p>These events provide additional information about activity occurring on the system, such as process creation, network connections, and other events depending on the configuration we installed.</p>
+<h2 id="next-steps">Next Steps<a hidden class="anchor" aria-hidden="true" href="#next-steps">#</a></h2>
+<p>With Sysmon installed and generating additional telemetry, our Windows Server is now producing valuable data that can be used for DFIR investigations and threat hunting.</p>
+<p>However, generating telemetry is only part of the process. We now need to make sure this data is collected and sent to our Elastic environment.</p>
+<p>In the next section, we will look at <strong>how to ingest data into Elasticsearch</strong> and begin working with the data generated by our Windows Server.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/dfir/">DFIR</a></li>
+      <li><a href="http://localhost:1313/tags/sysmon/">Sysmon</a></li>
+      <li><a href="http://localhost:1313/tags/windows-server/">Windows Server</a></li>
+      <li><a href="http://localhost:1313/tags/elastic/">Elastic</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/">
+    <span class="title">« Prev</span>
+    <span>MYDFIR 30-Day Elastic Challenge: Windows Server</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">b1nary0utput</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

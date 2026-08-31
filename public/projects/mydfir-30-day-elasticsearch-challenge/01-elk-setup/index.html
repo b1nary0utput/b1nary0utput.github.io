@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>MYDFIR 30-Day Elastic Challenge: ELK Setup | b1nary0utput</title>
+<meta name="keywords" content="dfir, elastic, kibana, virtualbox, homelab">
+<meta name="description" content="A walkthrough of my VirtualBox-based lab deployment for the MYDFIR 30-Day Elastic Challenge, including pfSense, Elasticsearch, Kibana, and network configuration.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4d83aa9fede59869c78f2dfbc08aba28c49ca7d3952dcd5eea858ace38c3f08d.css" integrity="sha256-TYOqn&#43;3lmGnHjy37wIq6KMScp9OVLc1e6oWKzjjD8I0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/">
+  <meta property="og:site_name" content="b1nary0utput">
+  <meta property="og:title" content="MYDFIR 30-Day Elastic Challenge: ELK Setup">
+  <meta property="og:description" content="A walkthrough of my VirtualBox-based lab deployment for the MYDFIR 30-Day Elastic Challenge, including pfSense, Elasticsearch, Kibana, and network configuration.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-08-04T19:59:32-06:00">
+    <meta property="article:modified_time" content="2026-08-04T19:59:32-06:00">
+    <meta property="article:tag" content="DFIR">
+    <meta property="article:tag" content="Elastic">
+    <meta property="article:tag" content="Kibana">
+    <meta property="article:tag" content="VirtualBox">
+    <meta property="article:tag" content="Homelab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MYDFIR 30-Day Elastic Challenge: ELK Setup">
+  <meta name="twitter:description" content="A walkthrough of my VirtualBox-based lab deployment for the MYDFIR 30-Day Elastic Challenge, including pfSense, Elasticsearch, Kibana, and network configuration.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Projects",
+      "item": "http://localhost:1313/projects/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "MYDFIR 30-Day Elastic Challenge",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "MYDFIR 30-Day Elastic Challenge: ELK Setup",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MYDFIR 30-Day Elastic Challenge: ELK Setup",
+  "name": "MYDFIR 30-Day Elastic Challenge: ELK Setup",
+  "description": "A walkthrough of my VirtualBox-based lab deployment for the MYDFIR 30-Day Elastic Challenge, including pfSense, Elasticsearch, Kibana, and network configuration.",
+  "keywords": [
+    "dfir", "elastic", "kibana", "virtualbox", "homelab"
+  ],
+  "articleBody": "pfSense Firewall The first step is to deploy a pfSense firewall that will act as the gateway for the isolated lab network.\nThe LAN network uses 172.31.0.0/24, while the WAN interface receives its IP address via DHCP. This provides the isolated lab network with external connectivity while keeping the lab hosts separated from the physical network.\nThe ELK server is running Ubuntu 24.04 Desktop, downloaded from osboxes.org. I chose the Desktop edition instead of Ubuntu Server simply because it makes screenshots and demonstrations easier to follow.\nInstalling Elasticsearch We will proceed to download Elasticsearch from the following link:\nDownload Elasticsearch\nOnce the download is complete, we will move to the Downloads folder and execute the installation with:\nsudo dpkg -i elasticsearch-9.4.3-amd64.deb Once the installation is complete, the installer displays the post-installation steps.\nWe need to update Elasticsearch.yml so Elasticsearch listens on the lab network instead of only the localhost interface.\nsudo nano /etc/elasticsearch/elasticsearch.yml Next, we enable Elasticsearch to start automatically at boot, start the service, and verify that it is running.\nsudo systemctl daemon-reload sudo systemctl enable elasticsearch.service sudo systemctl start elasticsearch.service sudo systemctl status elasticsearch.service As we can see, the Elasticsearch service has started.\nInstalling Kibana Next, we download and install Kibana. We can download it from the following link:\nDownload Kibana\nExecute the installation with:\nsudo dpkg -i kibana-9.4.3-amd64.deb Before starting the service, we need to edit kibana.yml and configure the host and port information.\nOnce that’s done, we will proceed to start the Kibana service with the following commands:\nsudo systemctl daemon-reload sudo systemctl enable kibana.service sudo systemctl start kibana.service sudo systemctl status kibana.service Kibana enrollment token With Kibana running, we now need to generate an enrollment token. This token is used to securely connect Kibana to the Elasticsearch instance.\ncd /usr/share/elasticsearch/bin ls -l sudo ./elasticsearch-create-enrollment-token --scope kibana The --scope kibana option generates an enrollment token specifically for configuring Kibana.\nBecause my host machine will act as the analyst workstation, I need a way to access Kibana from the host. To accomplish this, I’ll configure port forwarding in VirtualBox.\nIn VirtualBox, open the VM’s Settings → Network → Adapter 1 → Port Forwarding.\nThis is the rule we will add. This forwards a port on the host into the pfSense VM’s WAN interface.\nWe also need to configure a second port forward on pfSense. In the pfSense web GUI navigate to:\nFirewall → NAT → Port Forward → Add\nWe can now open a web browser on the analyst workstation and navigate to http://localhost:5601. This should bring up the Kibana setup page, where we can paste the enrollment token generated earlier.\nClick the Configure Elastic button to continue.\nNext, Kibana displays a verification code that should be entered into the console. In my case, this step did not work as expected. The script to generate the verification code did not work for me. However, after checking the Kibana service status with sudo systemctl status kibana, I was able to find the verification code there and continue with the setup.\nKibana will now complete the remaining configuration automatically.\nFinally, we should see the Kibana home screen.\nKibana encryption keys The next step is to generate the encryption keys required by Kibana.\nWe then add these keys to the Kibana keystore.\nWith these steps completed, the Elasticsearch and Kibana components of the lab are now up and running.\nNext Steps In the next section of the challenge, we will continue building the environment by deploying our Fleet Server and Windows Server. The Fleet Server will allow us to centrally manage Elastic Agents, while the Windows Server will provide the telemetry needed for our future detection and DFIR activities.\nWe will also begin collecting Windows telemetry that will become increasingly useful as we continue through the challenge.\n",
+  "wordCount" : "627",
+  "inLanguage": "en",
+  "datePublished": "2026-08-04T19:59:32-06:00",
+  "dateModified": "2026-08-04T19:59:32-06:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "b1nary0utput",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="b1nary0utput (Alt + H)">b1nary0utput</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/notes/" title="Notes">
+                    <span>Notes</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      MYDFIR 30-Day Elastic Challenge: ELK Setup
+    </h1>
+    <div class="post-meta">
+
+<span title='2026-08-04 19:59:32 -0600 CST'>August 4, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#pfsense-firewall" aria-label="pfSense Firewall">pfSense Firewall</a></li>
+            <li>
+                <a href="#installing-elasticsearch" aria-label="Installing Elasticsearch">Installing Elasticsearch</a></li>
+            <li>
+                <a href="#installing-kibana" aria-label="Installing Kibana">Installing Kibana</a><ul>
+                    
+            <li>
+                <a href="#kibana-enrollment-token" aria-label="Kibana enrollment token">Kibana enrollment token</a></li>
+            <li>
+                <a href="#kibana-encryption-keys" aria-label="Kibana encryption keys">Kibana encryption keys</a></li></ul>
+            </li>
+            <li>
+                <a href="#next-steps" aria-label="Next Steps">Next Steps</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h2 id="pfsense-firewall">pfSense Firewall<a hidden class="anchor" aria-hidden="true" href="#pfsense-firewall">#</a></h2>
+<p>The first step is to deploy a pfSense firewall that will act as the gateway for the isolated lab network.</p>
+<p>The LAN network uses <code>172.31.0.0/24</code>, while the WAN interface receives its IP address via DHCP. This provides the isolated lab network with external connectivity while keeping the lab hosts separated from the physical network.</p>
+<p><a href="VirtualBox_MYDFIR-FW_WAN_LAN_Network_Configuration.png"><img alt="pfsense firewall network configuration console" loading="lazy" src="VirtualBox_MYDFIR-FW_WAN_LAN_Network_Configuration.png"></a></p>
+<p>The ELK server is running <strong>Ubuntu 24.04</strong> Desktop, downloaded from <a href="https://www.osboxes.org/ubuntu/">osboxes.org</a>. I chose the Desktop edition instead of Ubuntu Server simply because it makes screenshots and demonstrations easier to follow.</p>
+<h2 id="installing-elasticsearch">Installing Elasticsearch<a hidden class="anchor" aria-hidden="true" href="#installing-elasticsearch">#</a></h2>
+<p>We will proceed to download Elasticsearch from the following link:</p>
+<p><a href="https://www.elastic.co/downloads/Elasticsearch">Download Elasticsearch</a></p>
+<p><a href="Download_Elasticsearch.png"><img alt="Downloading Elasticsearch on MYDFIR-ELK" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Download_Elasticsearch.png"></a></p>
+<p>Once the download is complete, we will move to the Downloads folder and execute the installation with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dpkg -i elasticsearch-9.4.3-amd64.deb
+</span></span></code></pre></div><p><a href="Elasticsearch_installation.png"><img alt="Installation output from Elasticsearch" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Elasticsearch_installation.png"></a></p>
+<p>Once the installation is complete, the installer displays the post-installation steps.</p>
+<p>We need to update <code>Elasticsearch.yml</code> so Elasticsearch listens on the lab network instead of only the localhost interface.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo nano /etc/elasticsearch/elasticsearch.yml
+</span></span></code></pre></div><p><a href="editing_Elasticsearch.yml.png"><img alt="Editing the Elasticsearch configuration file" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Editing_elasticsearch.yml.png"></a></p>
+<p>Next, we enable Elasticsearch to start automatically at boot, start the service, and verify that it is running.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl daemon-reload
+</span></span><span style="display:flex;"><span>sudo systemctl enable elasticsearch.service
+</span></span><span style="display:flex;"><span>sudo systemctl start elasticsearch.service
+</span></span><span style="display:flex;"><span>sudo systemctl status elasticsearch.service
+</span></span></code></pre></div><p><a href="starting_and_enabling_Elasticsearch.png"><img alt="Installing and enabling Elasticsearch" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Starting_and_enabling_elasticsearch.png"></a></p>
+<p>As we can see, the Elasticsearch service has started.</p>
+<h2 id="installing-kibana">Installing Kibana<a hidden class="anchor" aria-hidden="true" href="#installing-kibana">#</a></h2>
+<p>Next, we download and install Kibana. We can download it from the following link:</p>
+<p><a href="https://www.elastic.co/downloads/kibana">Download Kibana</a></p>
+<p><a href="Download_Kibana.png"><img alt="Downloading Kibana on MYDFIR-ELK" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Download_Kibana.png"></a></p>
+<p>Execute the installation with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo dpkg -i kibana-9.4.3-amd64.deb
+</span></span></code></pre></div><p><a href="Kibana_installation.png"><img alt="Kibana installation on MYDFIR-ELK" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Kibana_installation.png"></a></p>
+<p>Before starting the service, we need to edit <code>kibana.yml</code> and configure the host and port information.</p>
+<p><a href="editing_kibana.yml.png"><img alt="Editing Kibana.yml file" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Editing_kibana.yml.png"></a></p>
+<p>Once that&rsquo;s done, we will proceed to start the Kibana service with the following commands:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl daemon-reload
+</span></span><span style="display:flex;"><span>sudo systemctl enable kibana.service
+</span></span><span style="display:flex;"><span>sudo systemctl start kibana.service
+</span></span><span style="display:flex;"><span>sudo systemctl status kibana.service
+</span></span></code></pre></div><p><a href="starting_and_enabling_kibana.png"><img alt="Installing and enabling Kibana" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Starting_and_enabling_kibana.png"></a></p>
+<h3 id="kibana-enrollment-token">Kibana enrollment token<a hidden class="anchor" aria-hidden="true" href="#kibana-enrollment-token">#</a></h3>
+<p>With Kibana running, we now need to generate an enrollment token. This token is used to securely connect Kibana to the Elasticsearch instance.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /usr/share/elasticsearch/bin
+</span></span><span style="display:flex;"><span>ls -l
+</span></span><span style="display:flex;"><span>sudo ./elasticsearch-create-enrollment-token --scope kibana
+</span></span></code></pre></div><p>The <code>--scope kibana</code> option generates an enrollment token specifically for configuring Kibana.</p>
+<p><a href="Elasticsearch_Kibana_enrollment_token.png"><img alt="Creating an Elasticsearch enrollment token" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Elasticsearch_Kibana_enrollment_token.png"></a></p>
+<p>Because my host machine will act as the analyst workstation, I need a way to access Kibana from the host. To accomplish this, I&rsquo;ll configure port forwarding in VirtualBox.</p>
+<p>In VirtualBox, open the VM&rsquo;s Settings → Network → Adapter 1 → Port Forwarding.</p>
+<p><a href="NAT_Port_Forward_button.png"><img alt="VirtualBox NAT port forward button" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/NAT_Port_Forward_button.png"></a></p>
+<p>This is the rule we will add. This forwards a port on the host into the pfSense VM&rsquo;s WAN interface.</p>
+<p><a href="NAT_Port_Forward_rule.png"><img alt="VirtualBox NAT port forward rule" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/NAT_Port_Forward_rule.png"></a></p>
+<p>We also need to configure a second port forward on pfSense. In the pfSense web GUI navigate to:</p>
+<p>Firewall → NAT → Port Forward → Add</p>
+<p><a href="pfsense_NAT_rule.png"><img alt="pfsense NAT port forward rule" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/pfsense_NAT_rule.png"></a></p>
+<p>We can now open a web browser on the analyst workstation and navigate to <code>http://localhost:5601</code>. This should bring up the Kibana setup page, where we can paste the enrollment token generated earlier.</p>
+<p>Click the <code>Configure Elastic</code> button to continue.</p>
+<p><a href="configure_Elastic_with_enrollment_token.png"><img alt="Paste Elastic enrollment token to configure" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Configure_Elastic_with_enrollment_token.png"></a></p>
+<p>Next, Kibana displays a verification code that should be entered into the console. In my case, this step did not work as expected. The script to generate the verification code did not work for me. However, after checking the Kibana service status with <code>sudo systemctl status kibana</code>, I was able to find the verification code there and continue with the setup.</p>
+<p><a href="configure_Elastic_verification_code.png"><img alt="Elastic verification code" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Configure_Elastic_verification_code.png"></a></p>
+<p>Kibana will now complete the remaining configuration automatically.</p>
+<p><a href="configure_Elastic_completing_setup.png"><img alt="Elastic configuration setup finishing steps" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Configure_Elastic_completing_setup.png"></a></p>
+<p>Finally, we should see the Kibana home screen.</p>
+<p><a href="configure_Elastic_home_screen.png"><img alt="Elastic Home Screen" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Configure_Elastic_home_screen.png"></a></p>
+<h3 id="kibana-encryption-keys">Kibana encryption keys<a hidden class="anchor" aria-hidden="true" href="#kibana-encryption-keys">#</a></h3>
+<p>The next step is to generate the encryption keys required by Kibana.</p>
+<p><a href="Kibana_encryption_keys.png"><img alt="Generating Kibana Encryption Keys" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Kibana_encryption_keys.png"></a></p>
+<p>We then add these keys to the Kibana keystore.</p>
+<p><a href="Kibana_Keystore.png"><img alt="Adding the keys to Kibana Keystore" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/01-elk-setup/Kibana_Keystore.png"></a></p>
+<p>With these steps completed, the Elasticsearch and Kibana components of the lab are now up and running.</p>
+<h2 id="next-steps">Next Steps<a hidden class="anchor" aria-hidden="true" href="#next-steps">#</a></h2>
+<p>In the next section of the challenge, we will continue building the environment by deploying our <strong>Fleet Server</strong> and <strong>Windows Server</strong>. The Fleet Server will allow us to centrally manage Elastic Agents, while the Windows Server will provide the telemetry needed for our future detection and DFIR activities.</p>
+<p>We will also begin collecting Windows telemetry that will become increasingly useful as we continue through the challenge.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/dfir/">DFIR</a></li>
+      <li><a href="http://localhost:1313/tags/elastic/">Elastic</a></li>
+      <li><a href="http://localhost:1313/tags/kibana/">Kibana</a></li>
+      <li><a href="http://localhost:1313/tags/virtualbox/">VirtualBox</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="next" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/02-windows-server/">
+    <span class="title">Next »</span>
+    <span>MYDFIR 30-Day Elastic Challenge: Windows Server</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">b1nary0utput</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

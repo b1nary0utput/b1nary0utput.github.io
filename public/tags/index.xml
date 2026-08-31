@@ -6,6 +6,112 @@
     <description>Recent content in Tags on b1nary0utput</description>
     <generator>Hugo</generator>
     <language>en-us</language>
+    <lastBuildDate>Fri, 14 Aug 2026 20:00:00 -0600</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DFIR</title>
+      <link>http://localhost:1313/tags/dfir/</link>
+      <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/tags/dfir/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Elastic</title>
+      <link>http://localhost:1313/tags/elastic/</link>
+      <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/tags/elastic/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Homelab</title>
+      <link>http://localhost:1313/tags/homelab/</link>
+      <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/tags/homelab/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sysmon</title>
+      <link>http://localhost:1313/tags/sysmon/</link>
+      <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/tags/sysmon/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Windows Server</title>
+      <link>http://localhost:1313/tags/windows-server/</link>
+      <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/tags/windows-server/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Command Line</title>
+      <link>http://localhost:1313/tags/command-line/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/command-line/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Linux</title>
+      <link>http://localhost:1313/tags/linux/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/linux/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Networking</title>
+      <link>http://localhost:1313/tags/networking/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/networking/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Public IP</title>
+      <link>http://localhost:1313/tags/public-ip/</link>
+      <pubDate>Fri, 14 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/public-ip/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Network Architecture</title>
+      <link>http://localhost:1313/tags/network-architecture/</link>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/network-architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Network Security</title>
+      <link>http://localhost:1313/tags/network-security/</link>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/network-security/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Network Segmentation</title>
+      <link>http://localhost:1313/tags/network-segmentation/</link>
+      <pubDate>Thu, 13 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/network-segmentation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>VirtualBox</title>
+      <link>http://localhost:1313/tags/virtualbox/</link>
+      <pubDate>Wed, 05 Aug 2026 19:59:32 -0600</pubDate>
+      <guid>http://localhost:1313/tags/virtualbox/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kibana</title>
+      <link>http://localhost:1313/tags/kibana/</link>
+      <pubDate>Tue, 04 Aug 2026 19:59:32 -0600</pubDate>
+      <guid>http://localhost:1313/tags/kibana/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DNS</title>
+      <link>http://localhost:1313/tags/dns/</link>
+      <pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/dns/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

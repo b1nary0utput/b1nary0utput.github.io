@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Sysmon on b1nary0utput</title>
+    <link>http://localhost:1313/tags/sysmon/</link>
+    <description>Recent content in Sysmon on b1nary0utput</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 14 Aug 2026 20:00:00 -0600</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/sysmon/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MYDFIR 30-Day Elastic Challenge: Sysmon</title>
+      <link>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/</link>
+      <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/</guid>
+      <description>Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge.</description>
+    </item>
+  </channel>
+</rss>
