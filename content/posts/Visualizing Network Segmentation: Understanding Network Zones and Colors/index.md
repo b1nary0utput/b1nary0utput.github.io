@@ -1,7 +1,6 @@
 ---
 title: "Visualizing Network Segmentation: Understanding Network Zones and Colors"
 date: 2026-08-13
-draft: true
 description: "A visual guide to understanding network segmentation and the use of colors to distinguish network zones in diagrams."
 summary: "Learn how network zones can be represented visually using colors to make segmentation easier to understand."
 tags:
