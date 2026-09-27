@@ -6,7 +6,7 @@
     <description>Recent content in MYDFIR 30-Day Elastic Challenge on b1nary0utput</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 14 Aug 2026 20:00:00 -0600</lastBuildDate>
+    <lastBuildDate>Sun, 27 Sep 2026 08:00:00 -0600</lastBuildDate>
     <atom:link href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>MYDFIR 30-Day Elastic Challenge: ELK Setup</title>
@@ -28,6 +28,13 @@
       <pubDate>Fri, 14 Aug 2026 20:00:00 -0600</pubDate>
       <guid>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/</guid>
       <description>Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge.</description>
+    </item>
+    <item>
+      <title>MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch</title>
+      <link>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/</link>
+      <pubDate>Sun, 27 Sep 2026 08:00:00 -0600</pubDate>
+      <guid>http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/</guid>
+      <description>Learn how to ingest Windows and Sysmon telemetry into Elasticsearch using Elastic Agent and Fleet.</description>
     </item>
   </channel>
 </rss>

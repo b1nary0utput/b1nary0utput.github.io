@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="dark">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch | b1nary0utput</title>
+<meta name="keywords" content="DFIR, Elasticsearch, Elastic Agent, Kibana, Sysmon, Homelab">
+<meta name="description" content="Learn how to ingest Windows and Sysmon telemetry into Elasticsearch using Elastic Agent and Fleet.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.4d83aa9fede59869c78f2dfbc08aba28c49ca7d3952dcd5eea858ace38c3f08d.css" integrity="sha256-TYOqn&#43;3lmGnHjy37wIq6KMScp9OVLc1e6oWKzjjD8I0=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "light") {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/">
+  <meta property="og:site_name" content="b1nary0utput">
+  <meta property="og:title" content="MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch">
+  <meta property="og:description" content="Learn how to ingest Windows and Sysmon telemetry into Elasticsearch using Elastic Agent and Fleet.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-09-27T08:00:00-06:00">
+    <meta property="article:modified_time" content="2026-09-27T08:00:00-06:00">
+    <meta property="article:tag" content="DFIR">
+    <meta property="article:tag" content="Elasticsearch">
+    <meta property="article:tag" content="Elastic Agent">
+    <meta property="article:tag" content="Kibana">
+    <meta property="article:tag" content="Sysmon">
+    <meta property="article:tag" content="Homelab">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch">
+  <meta name="twitter:description" content="Learn how to ingest Windows and Sysmon telemetry into Elasticsearch using Elastic Agent and Fleet.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Projects",
+      "item": "http://localhost:1313/projects/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "MYDFIR 30-Day Elastic Challenge",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch",
+      "item": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch",
+  "name": "MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch",
+  "description": "Learn how to ingest Windows and Sysmon telemetry into Elasticsearch using Elastic Agent and Fleet.",
+  "keywords": [
+    "DFIR", "Elasticsearch", "Elastic Agent", "Kibana", "Sysmon", "Homelab"
+  ],
+  "articleBody": "Introduction In the previous section, we installed Sysmon on our Windows Server 2019 VM to collect additional security telemetry.\nNow, we need to ensure that this data is collected by the Elastic Agent and ingested into Elasticsearch so that we can search and analyze it using Kibana.\nAdding Sysmon Integration Once we are logged into Kibana, click on the Add Integrations button.\nSearch for Windows Events and click to select the Custom Windows Event Logs.\nClick Add Custom Windows Event Logs\nConfigure the Sysmon Integration Configure the Integration information by entering a name and description for the integration.\nScroll down to the Custom Windows event logs section.\nFor the Channel Name, enter the following: Microsoft-Windows-Sysmon/Operational\nScroll down to *Step 2: Where to add this integration?\nSelect Agent policy and choose MYDFIR-WIN-POLICY.\nClick Save and continue. In the popup window, click Save and deploy changes.\nThe Sysmon integration has now been added to our Windows agent policy.\nIntegrating Windows Defender Next, we will configure another integration to collect Windows Defender events.\nGo back to Integrations and click on the Add Integrations button.\nSearch for Windows Events and select Custom Windows Event Logs.\nClick Add Custom Windows Event Logs\nConfigure the Windows Defender Integration Under Integration information, enter the following:\nName: MYDFIR-WIN-DEFENDER Description: Collect Defender Logs\nScroll down to Custom Windows event logs and enter the following channel name:\nMicrosoft-Windows-Windows Defender/Operational\nUnder Advanced Options, locate the Event ID field.\nEnter the following event IDs: 1116,1117,5001\nThese events are associated with malware or potentially unwanted software detection, remediation actions, and real-time protection being disabled.\nUnder Step 2: Where to add this integration?, select the same agent policy used for the Sysmon integration: MYDFIR-WIN-POLICY.\nClick Save and continue. In the popup window, click Save and deploy changes.\nWe have now added both integrations to our Windows agent policy:\nMYDFIR-WIN — collects Sysmon events. MYDFIR-WIN-DEFENDER — collects Windows Defender events.\nWe have now added two integrations to our Windows agent policy:\nSysmon integration — collects events from the Sysmon Operational channel.\nWindows Defender integration — collects events from the Windows Defender Operational channel.\nBoth integrations are assigned to the MYDFIR-WIN-POLICY agent policy, allowing the Elastic Agent on our Windows Server to collect events from both channels.\nVerify the Elastic Agent Go to Management \u003e Fleet \u003e Agents and check that the Windows Server agent is healthy and that the updated policy has been applied.\nSearch for the events in Kibana Open Analytics \u003e Discover, select the appropriate data view, and search for events from your Windows Server. You can filter by the agent name and the Sysmon or Defender event channel.\nYou can use these KQL filters:\nSysmon events:\nagent.name: \"MYDFIR-WIN\" and winlog.channel: \"Microsoft-Windows-Sysmon/Operational\"\nWindows Defender events:\nagent.name: \"MYDFIR-WIN\" and winlog.channel: \"Microsoft-Windows-Windows Defender/Operational\"\nTo filter for the Defender event IDs you configured:\nagent.name: \"MYDFIR-WIN\" and winlog.event_id: (1116 or 1117 or 5001)\nTroubleshooting Briefly cover what to check if no events appear:\nConfirm the Elastic Agent is healthy.\nConfirm Sysmon is running and generating events.\nVerify the channel names and event ID filters.\nCheck that the integrations are assigned to the correct agent policy.\nOne technical detail: Event ID 5001 is associated with Windows Defender real-time protection being disabled. The other two IDs relate to threat detection and remediation. Make sure the events you want to collect match the event IDs configured in the integration.\nConclusion In this section, we configured two Custom Windows Event Logs integrations to collect Sysmon and Windows Defender events from our Windows Server 2019 VM.\nWe assigned both integrations to the MYDFIR-WIN-POLICY agent policy, verified that the Elastic Agent was healthy, and searched for the collected events in Kibana Discover.\nWith these integrations in place, we can begin exploring the security telemetry generated by our Windows Server and use it for further investigation in our Elastic lab.\n",
+  "wordCount" : "636",
+  "inLanguage": "en",
+  "datePublished": "2026-09-27T08:00:00-06:00",
+  "dateModified": "2026-09-27T08:00:00-06:00",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "b1nary0utput",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="b1nary0utput (Alt + H)">b1nary0utput</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="http://localhost:1313/" title="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/notes/" title="Notes">
+                    <span>Notes</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About">
+                    <span>About</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch
+    </h1>
+    <div class="post-meta">
+
+<span title='2026-09-27 08:00:00 -0600 CST'>September 27, 2026</span>&nbsp;·&nbsp;<span>3 min</span>
+
+</div>
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><ul>
+            <li>
+                <a href="#introduction" aria-label="Introduction">Introduction</a></li>
+            <li>
+                <a href="#adding-sysmon-integration" aria-label="Adding Sysmon Integration">Adding Sysmon Integration</a><ul>
+                    
+            <li>
+                <a href="#configure-the-sysmon-integration" aria-label="Configure the Sysmon Integration">Configure the Sysmon Integration</a></li></ul>
+            </li>
+            <li>
+                <a href="#integrating-windows-defender" aria-label="Integrating Windows Defender">Integrating Windows Defender</a><ul>
+                    
+            <li>
+                <a href="#configure-the-windows-defender-integration" aria-label="Configure the Windows Defender Integration">Configure the Windows Defender Integration</a></li></ul>
+            </li>
+            <li>
+                <a href="#verify-the-elastic-agent" aria-label="Verify the Elastic Agent">Verify the Elastic Agent</a></li>
+            <li>
+                <a href="#search-for-the-events-in-kibana" aria-label="Search for the events in Kibana">Search for the events in Kibana</a></li>
+            <li>
+                <a href="#troubleshooting" aria-label="Troubleshooting">Troubleshooting</a></li>
+            <li>
+                <a href="#conclusion" aria-label="Conclusion">Conclusion</a>
+            </li>
+        </ul>
+    </div>
+</details>
+
+  <div class="post-content md-content"><h2 id="introduction">Introduction<a hidden class="anchor" aria-hidden="true" href="#introduction">#</a></h2>
+<p>In the previous section, we installed <strong>Sysmon</strong> on our Windows Server 2019 VM to collect additional security telemetry.</p>
+<p>Now, we need to ensure that this data is collected by the <strong>Elastic Agent</strong> and ingested into <strong>Elasticsearch</strong> so that we can search and analyze it using <strong>Kibana</strong>.</p>
+<h2 id="adding-sysmon-integration">Adding Sysmon Integration<a hidden class="anchor" aria-hidden="true" href="#adding-sysmon-integration">#</a></h2>
+<p>Once we are logged into Kibana, click on the <strong>Add Integrations</strong> button.</p>
+<p><a href="Add_Integrations_button.png"><img alt="Add Integrations button" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Add_Integrations_button.png"></a></p>
+<p>Search for <strong>Windows Events</strong> and click to select the <strong>Custom Windows Event Logs</strong>.</p>
+<p><a href="Search_Windows_Events.png"><img alt="Search Windows Events" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Search_Windows_Events.png"></a></p>
+<p>Click <strong>Add Custom Windows Event Logs</strong></p>
+<p><a href="Add_Custom_Windows_Event_Logs.png"><img alt="Add Custom Windows Event Logs" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Add_Custom_Windows_Event_Logs.png"></a></p>
+<h3 id="configure-the-sysmon-integration">Configure the Sysmon Integration<a hidden class="anchor" aria-hidden="true" href="#configure-the-sysmon-integration">#</a></h3>
+<p>Configure the <strong>Integration information</strong> by entering a name and description for the integration.</p>
+<p><a href="Configure_Integration.png"><img alt="Configure Integration" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Configure_Integration.png"></a></p>
+<p>Scroll down to the <strong>Custom Windows event logs</strong> section.</p>
+<p>For the Channel Name, enter the following: <code>Microsoft-Windows-Sysmon/Operational</code></p>
+<p><a href="Channel_name.png"><img alt="Channel name" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Channel_name.png"></a></p>
+<p>Scroll down to <strong>*Step 2: Where to add this integration?</strong></p>
+<p>Select <strong>Agent policy</strong> and choose <strong>MYDFIR-WIN-POLICY</strong>.</p>
+<p><a href="Integration_Agent_Policy.png"><img alt="Integration Agent Policy" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Integration_Agent_Policy.png"></a></p>
+<p>Click <strong>Save and continue</strong>. In the popup window, click <strong>Save and deploy changes</strong>.</p>
+<p><a href="Save_and_deploy_changes.png"><img alt="Save and deploy changes" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Save_and_deploy_changes.png"></a></p>
+<p>The Sysmon integration has now been added to our Windows agent policy.</p>
+<h2 id="integrating-windows-defender">Integrating Windows Defender<a hidden class="anchor" aria-hidden="true" href="#integrating-windows-defender">#</a></h2>
+<p>Next, we will configure another integration to collect Windows Defender events.</p>
+<p>Go back to <strong>Integrations</strong> and click on the <strong>Add Integrations</strong> button.</p>
+<p><a href="Add_Integrations_button.png"><img alt="Add Integrations button" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Add_Integrations_button.png"></a></p>
+<p>Search for <strong>Windows Events</strong> and select <strong>Custom Windows Event Logs</strong>.</p>
+<p><a href="Search_Windows_Events.png"><img alt="Search Windows Events" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Search_Windows_Events.png"></a></p>
+<p>Click <strong>Add Custom Windows Event Logs</strong></p>
+<p><a href="Add_Custom_Windows_Event_Logs.png"><img alt="Add Custom Windows Event Logs" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Add_Custom_Windows_Event_Logs.png"></a></p>
+<h3 id="configure-the-windows-defender-integration">Configure the Windows Defender Integration<a hidden class="anchor" aria-hidden="true" href="#configure-the-windows-defender-integration">#</a></h3>
+<p>Under Integration information, enter the following:</p>
+<p>Name: <code>MYDFIR-WIN-DEFENDER</code>
+Description: <code>Collect Defender Logs</code></p>
+<p><a href="Integration_settings.png"><img alt="Integration settings" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Integration_settings.png"></a></p>
+<p>Scroll down to <strong>Custom Windows event logs</strong> and enter the following channel name:</p>
+<p><code>Microsoft-Windows-Windows Defender/Operational</code></p>
+<p>Under <strong>Advanced Options</strong>, locate the <strong>Event ID</strong> field.</p>
+<p><a href="Custom_window_event_logs.png"><img alt="Custom window event logs" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Custom_window_event_logs.png"></a></p>
+<p>Enter the following event IDs: <code>1116,1117,5001</code></p>
+<p>These events are associated with malware or potentially unwanted software detection, remediation actions, and real-time protection being disabled.</p>
+<p><a href="Event_IDs.png"><img alt="Event IDs" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Event_IDs.png"></a></p>
+<p>Under <strong>Step 2: Where to add this integration?</strong>, select the same agent policy used for the Sysmon integration: <strong>MYDFIR-WIN-POLICY</strong>.</p>
+<p><a href="Integration_Agent_Policy.png"><img alt="Integration Agent Policy" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Integration_Agent_Policy.png"></a></p>
+<p>Click <strong>Save and continue</strong>. In the popup window, click <strong>Save and deploy changes</strong>.</p>
+<p><a href="Save_and_deploy_changes.png"><img alt="Save and deploy changes" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Save_and_deploy_changes.png"></a></p>
+<p>We have now added both integrations to our Windows agent policy:</p>
+<p><strong>MYDFIR-WIN</strong> — collects Sysmon events.
+<strong>MYDFIR-WIN-DEFENDER</strong> — collects Windows Defender events.</p>
+<p><a href="Custom_windows_event_logs.png"><img alt="Custom windows event logs" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Custom_windows_event_logs.png"></a></p>
+<p>We have now added two integrations to our Windows agent policy:</p>
+<p><strong>Sysmon integration</strong> — collects events from the Sysmon Operational channel.</p>
+<p><strong>Windows Defender integration</strong> — collects events from the Windows Defender Operational channel.</p>
+<p>Both integrations are assigned to the <strong>MYDFIR-WIN-POLICY</strong> agent policy, allowing the Elastic Agent on our Windows Server to collect events from both channels.</p>
+<h2 id="verify-the-elastic-agent">Verify the Elastic Agent<a hidden class="anchor" aria-hidden="true" href="#verify-the-elastic-agent">#</a></h2>
+<p>Go to Management &gt; Fleet &gt; Agents and check that the Windows Server agent is healthy and that the updated policy has been applied.</p>
+<p><a href="verify_healthy_policy.png"><img alt="verify healthy policy" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/verify_healthy_policy.png"></a></p>
+<h2 id="search-for-the-events-in-kibana">Search for the events in Kibana<a hidden class="anchor" aria-hidden="true" href="#search-for-the-events-in-kibana">#</a></h2>
+<p>Open Analytics &gt; Discover, select the appropriate data view, and search for events from your Windows Server. You can filter by the agent name and the Sysmon or Defender event channel.</p>
+<p>You can use these KQL filters:</p>
+<p><strong>Sysmon events</strong>:</p>
+<p><code>agent.name: &quot;MYDFIR-WIN&quot; and winlog.channel: &quot;Microsoft-Windows-Sysmon/Operational&quot;</code></p>
+<p><a href="Sysmon_events.png"><img alt="Sysmon events" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Sysmon_events.png"></a></p>
+<p><strong>Windows Defender events</strong>:</p>
+<p><code>agent.name: &quot;MYDFIR-WIN&quot; and winlog.channel: &quot;Microsoft-Windows-Windows Defender/Operational&quot;</code></p>
+<p><a href="Windows_Defender_events.png"><img alt="Windows Defender events" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Windows_Defender_events.png"></a></p>
+<p>To filter for the Defender event IDs you configured:</p>
+<p><code>agent.name: &quot;MYDFIR-WIN&quot; and winlog.event_id: (1116 or 1117 or 5001)</code></p>
+<p><a href="Defender_event_ID.png"><img alt="Defender event ID" loading="lazy" src="/projects/mydfir-30-day-elasticsearch-challenge/04-data-ingestion/Defender_event_ID.png"></a></p>
+<h2 id="troubleshooting">Troubleshooting<a hidden class="anchor" aria-hidden="true" href="#troubleshooting">#</a></h2>
+<p>Briefly cover what to check if no events appear:</p>
+<p>Confirm the Elastic Agent is healthy.</p>
+<p>Confirm Sysmon is running and generating events.</p>
+<p>Verify the channel names and event ID filters.</p>
+<p>Check that the integrations are assigned to the correct agent policy.</p>
+<p><strong>One technical detail</strong>: Event ID 5001 is associated with Windows Defender real-time protection being disabled. The other two IDs relate to threat detection and remediation. Make sure the events you want to collect match the event IDs configured in the integration.</p>
+<h2 id="conclusion">Conclusion<a hidden class="anchor" aria-hidden="true" href="#conclusion">#</a></h2>
+<p>In this section, we configured two Custom Windows Event Logs integrations to collect Sysmon and Windows Defender events from our Windows Server 2019 VM.</p>
+<p>We assigned both integrations to the <strong>MYDFIR-WIN-POLICY</strong> agent policy, verified that the Elastic Agent was healthy, and searched for the collected events in Kibana Discover.</p>
+<p>With these integrations in place, we can begin exploring the security telemetry generated by our Windows Server and use it for further investigation in our Elastic lab.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/dfir/">DFIR</a></li>
+      <li><a href="http://localhost:1313/tags/elasticsearch/">Elasticsearch</a></li>
+      <li><a href="http://localhost:1313/tags/elastic-agent/">Elastic Agent</a></li>
+      <li><a href="http://localhost:1313/tags/kibana/">Kibana</a></li>
+      <li><a href="http://localhost:1313/tags/sysmon/">Sysmon</a></li>
+      <li><a href="http://localhost:1313/tags/homelab/">Homelab</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="http://localhost:1313/projects/mydfir-30-day-elasticsearch-challenge/03-sysmon/">
+    <span class="title">« Prev</span>
+    <span>MYDFIR 30-Day Elastic Challenge: Sysmon</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">b1nary0utput</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
