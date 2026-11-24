@@ -4,6 +4,7 @@ title: "MYDFIR 30-Day Elastic Challenge: ELK Setup"
 tags: ["dfir", "elastic", "kibana", "virtualbox", "homelab"]
 summary: "A walkthrough of my VirtualBox-based lab deployment for the MYDFIR 30-Day Elastic Challenge, including pfSense, Elasticsearch, Kibana, and network configuration."
 weight: 1
+draft: true
 ---
 
 ## pfSense Firewall

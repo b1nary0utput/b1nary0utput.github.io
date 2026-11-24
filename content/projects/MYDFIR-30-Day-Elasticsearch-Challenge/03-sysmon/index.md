@@ -4,6 +4,7 @@ title: "MYDFIR 30-Day Elastic Challenge: Sysmon"
 tags: ["DFIR", "Sysmon", "Windows Server", "Elastic", "Homelab"]
 summary: "Installing and configuring Sysmon on the Windows Server to collect additional security telemetry for the MYDFIR 30-Day Elastic Challenge."
 weight: 3
+draft: true
 ---
 
 ## Introduction

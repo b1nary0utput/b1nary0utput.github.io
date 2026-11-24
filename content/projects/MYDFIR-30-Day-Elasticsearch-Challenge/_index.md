@@ -5,6 +5,7 @@ cover:
   image: "cover.jpg"
   alt: "MYDFIR Elastic 30-Day Challenge"
   relative: true
+draft: true
 ---
 
 ## Overview

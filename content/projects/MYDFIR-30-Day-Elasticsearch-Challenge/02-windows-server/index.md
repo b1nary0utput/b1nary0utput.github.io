@@ -4,6 +4,7 @@ title: "MYDFIR 30-Day Elastic Challenge: Windows Server"
 tags: ["DFIR", "Windows Server", "VirtualBox", "Homelab"]
 summary: "Deploying a Fleet Server and enrolling a Windows Server 2019 VM as an Elastic Agent for the MYDFIR 30-Day Elastic Challenge."
 weight: 2
+draft: true
 ---
 
 ## Create a Fleet Server

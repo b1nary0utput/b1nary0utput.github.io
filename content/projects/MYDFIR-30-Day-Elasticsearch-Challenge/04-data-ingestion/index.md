@@ -4,6 +4,7 @@ title: "MYDFIR 30-Day Elastic Challenge: How to Ingest Data to Elasticsearch"
 tags: ["DFIR", "Elasticsearch", "Elastic Agent", "Kibana", "Sysmon", "Homelab"]
 summary: "Learn how to ingest Windows and Sysmon telemetry into Elasticsearch using Elastic Agent and Fleet."
 weight: 4
+draft: true
 ---
 
 ## Introduction
